@@ -1,33 +1,56 @@
-# LLM Time-Series / Stock Prediction (Colab Notebook)
+# Prompt-based LLM Classification for Stock/Time-Series Tabular Data
 
-Notebook-based experiment using Hugging Face Transformers to run **prompt-based (few-shot) inference** with an OpenLLaMA model on a tabular/time-series CSV dataset.
+Notebook experiment using Hugging Face Transformers to run **few-shot (prompt-based) inference** with **OpenLLaMA 3B** on a tabular/time-series dataset, framed as a **binary classification** task.
+
+## Overview
+**Goal:** Predict a binary target (`Target` = 0/1) from a small set of tabular features by converting rows into a text prompt and applying few-shot prompting.
+
+**Approach:** Sample a few labeled examples → build a prompt → run inference → parse the predicted label → evaluate.
+
+## Model
+- `openlm-research/open_llama_3b_v2`
+- Inference only (no fine-tuning)
 
 ## What it does
-- Loads a CSV dataset (not included in this repo)
-- Builds prompts from a few randomly sampled training examples
-- Runs inference with `openlm-research/open_llama_3b_v2`
-- Evaluates predictions (binary target)
+- Loads a CSV dataset (**not included** in this repo)
+- Builds prompts from randomly sampled labeled examples (few-shot)
+- Runs inference with OpenLLaMA
+- Evaluates predictions on a held-out split (binary target)
 
 ## Repository structure
-- `notebooks/` – main Colab/Jupyter notebook
-- `data/` – local data (ignored by git)
+- `notebook/` – main Colab/Jupyter notebook
+- `docs/` – report / notes
+- `data/` – local data (**ignored by git**)
 
 ## How to run (Colab)
-1. Open the notebook in Colab
+1. Open the notebook in Google Colab
 2. Run the install cell (`pip install ...`)
-3. Upload / provide your dataset CSV (see below)
+3. Provide the dataset CSV (see **Data** below)
 4. Run all cells
 
-## Data expectations
+## Data (not included)
+The dataset is not included due to usage/licensing restrictions.
 
-The notebook expects a CSV with:
-- feature columns (the notebook uses 5 columns)
-- a `Target` column with a binary label (0/1)
+### Expected format
+A CSV with:
+- feature columns (the notebook uses a subset of columns)
+- `Target` column with binary labels: 0/1
 
-Place your CSV locally at:
+### Expected path
+Place the file at:
 - `data/Rohdaten CSV.csv`
-(or edit the path in the notebook.)
 
-## Notes / Limitations
-- This notebook currently performs **inference**, not full fine-tuning.
-- Prompt sampling is random; set a fixed seed for reproducible results.
+(or update the path in the notebook.)
+
+## Reproducibility
+Few-shot sampling is random by default. For reproducible results, set a fixed random seed in the notebook before sampling examples.
+
+## Notes / limitations
+- This notebook performs **inference**, not fine-tuning.
+- Prompt sampling affects results; fixed seed is recommended.
+- This is an experimental baseline; next steps include stronger baselines and cleaner prompt templates.
+
+## Next steps
+- Add baseline models (e.g., logistic regression / XGBoost) for comparison
+- Improve prompt template + parsing robustness
+- Add cross-validation and more robust evaluation
